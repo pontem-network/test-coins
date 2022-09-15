@@ -1,4 +1,4 @@
-module test_coins::coins_extended {
+module test_coins_extended::coins_extended {
     use std::signer;
     use std::string::utf8;
 

@@ -22,7 +22,7 @@ And use in code:
 
 ```move
 use test_coins::coins::{USDT, BTC};
-use test_coins::extended_coins::{USDC, ETH, DAI};
+use test_coins_extended::extended_coins::{USDC, ETH, DAI};
 ...
 ```
 
