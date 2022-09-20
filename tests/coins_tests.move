@@ -18,6 +18,14 @@ module test_coins::coins_tests {
 
         assert!(coin::is_coin_initialized<BTC>(), 0);
         assert!(coin::is_coin_initialized<USDT>(), 1);
+
+        assert!(coin::name<BTC>() == utf8(b"Bitcoin"), 2);
+        assert!(coin::symbol<BTC>() == utf8(b"BTC"), 3);
+        assert!(coin::decimals<BTC>() == 8, 4);
+
+        assert!(coin::name<USDT>() == utf8(b"Tether"), 5);
+        assert!(coin::symbol<USDT>() == utf8(b"USDT"), 6);
+        assert!(coin::decimals<USDT>() == 6, 7);
     }
 
     #[test(token_admin = @test_token_admin, btc_owner = @test_btc_owner)]
@@ -32,6 +40,6 @@ module test_coins::coins_tests {
 
         mint_coin<BTC>(&token_admin, signer::address_of(&btc_owner), 100000000);
 
-        assert!(coin::name<BTC>() == utf8(b"Bitcoin"), 0);
+        assert!(coin::balance<BTC>(signer::address_of(&btc_owner)) == 100000000, 0);
     }
 }
