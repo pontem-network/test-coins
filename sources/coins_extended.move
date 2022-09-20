@@ -19,7 +19,7 @@ module test_coins_extended::coins_extended {
         burn: BurnCapability<CoinType>,
     }
 
-    /// Initializes `BTC` and `USDT` coins.
+    /// Initializes `ETH`, `USDC`, and `DAI` coins.
     public entry fun register_coins(token_admin: &signer) {
         let (eth_b, eth_f, eth_m) =
             coin::initialize<ETH>(token_admin,
