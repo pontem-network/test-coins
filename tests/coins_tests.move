@@ -28,18 +28,22 @@ module test_coins::coins_tests {
         assert!(coin::decimals<USDT>() == 6, 7);
     }
 
-    #[test(token_admin = @test_token_admin, btc_owner = @test_btc_owner)]
-    fun test_mint_coin(token_admin: signer, btc_owner: signer) {
+    #[test(token_admin = @test_token_admin, test_account = @test_account)]
+    fun test_mint_coin(token_admin: signer, test_account: signer) {
+        let account_address = signer::address_of(&test_account);
+
         genesis::setup();
         create_account(signer::address_of(&token_admin));
-        create_account(signer::address_of(&btc_owner));
+        create_account(account_address);
 
         register_coins(&token_admin);
 
-        coin::register<BTC>(&btc_owner);
+        coin::register<BTC>(&test_account);
+        mint_coin<BTC>(&token_admin, account_address, 100000000);
+        assert!(coin::balance<BTC>(account_address) == 100000000, 0);
 
-        mint_coin<BTC>(&token_admin, signer::address_of(&btc_owner), 100000000);
-
-        assert!(coin::balance<BTC>(signer::address_of(&btc_owner)) == 100000000, 0);
+        coin::register<USDT>(&test_account);
+        mint_coin<USDT>(&token_admin, account_address, 1000000);
+        assert!(coin::balance<USDT>(account_address) == 1000000, 1);
     }
 }

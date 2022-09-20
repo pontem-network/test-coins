@@ -33,18 +33,26 @@ module test_coins::coins_extended_tests {
         assert!(coin::decimals<DAI>() == 6, 11);
     }
 
-    #[test(token_admin = @test_token_extended_admin, eth_owner = @test_eth_owner)]
-    fun test_mint_coin(token_admin: signer, eth_owner: signer) {
+    #[test(token_admin = @test_token_extended_admin, test_account = @test_account)]
+    fun test_mint_coin(token_admin: signer, test_account: signer) {
+        let account_address = signer::address_of(&test_account);
+
         genesis::setup();
         create_account(signer::address_of(&token_admin));
-        create_account(signer::address_of(&eth_owner));
+        create_account(account_address);
 
         register_coins(&token_admin);
 
-        coin::register<ETH>(&eth_owner);
+        coin::register<ETH>(&test_account);
+        mint_coin<ETH>(&token_admin, account_address, 100000000);
+        assert!(coin::balance<ETH>(account_address) == 100000000, 0);
 
-        mint_coin<ETH>(&token_admin, signer::address_of(&eth_owner), 100000000);
+        coin::register<USDC>(&test_account);
+        mint_coin<USDC>(&token_admin, account_address, 1000000);
+        assert!(coin::balance<USDC>(account_address) == 1000000, 1);
 
-        assert!(coin::balance<ETH>(signer::address_of(&eth_owner)) == 100000000, 0);
+        coin::register<DAI>(&test_account);
+        mint_coin<DAI>(&token_admin, account_address, 1000000);
+        assert!(coin::balance<DAI>(account_address) == 1000000, 1);
     }
 }
