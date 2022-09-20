@@ -1,10 +1,10 @@
 [package]
 name = 'TestCoins'
-version = '0.1.0'
+version = '0.1.1'
 
 [dependencies.AptosFramework]
 git = 'https://github.com/aptos-labs/aptos-core.git'
-rev = '8f634bcd2e48c4972868d0053d3532f4f760ae19'
+rev = '843b204dce971d98449b82624f4f684c7a18b991'
 subdir = 'aptos-move/framework/aptos-framework'
 
 [addresses]
