@@ -2,7 +2,7 @@ module test_coins_extended::coins_extended {
     use std::signer;
     use std::string::utf8;
 
-    use aptos_framework::coin::{Self, MintCapability, BurnCapability};
+    use aptos_framework::coin::{Self, MintCapability, BurnCapability, Coin};
 
     /// Represents test USDC coin.
     struct USDC {}
@@ -46,5 +46,15 @@ module test_coins_extended::coins_extended {
         let caps = borrow_global<Caps<CoinType>>(token_admin_addr);
         let coins = coin::mint<CoinType>(amount, &caps.mint);
         coin::deposit(acc_addr, coins);
+    }
+
+    /// Burns coins
+    public entry fun burn_coin<CoinType>(token_admin: &signer, coins: Coin<CoinType>) acquires Caps {
+        if (coin::value(&coins) == 0) {
+            coin::destroy_zero(coins);
+        } else {
+            let caps = borrow_global<Caps<CoinType>>(signer::address_of(token_admin));
+            coin::burn(coins, &caps.burn);
+        };
     }
 }
