@@ -2,7 +2,7 @@ module test_coins_extended::coins_extended {
     use std::signer;
     use std::string::utf8;
 
-    use aptos_framework::coin::{Self, MintCapability, BurnCapability};
+    use aptos_framework::coin::{Self, MintCapability, BurnCapability, Coin};
 
     /// Represents test USDC coin.
     struct USDC {}
@@ -38,6 +38,18 @@ module test_coins_extended::coins_extended {
         move_to(token_admin, Caps<ETH> { mint: eth_m, burn: eth_b });
         move_to(token_admin, Caps<USDC> { mint: usdc_m, burn: usdc_b });
         move_to(token_admin, Caps<DAI> { mint: dai_m, burn: dai_b });
+    }
+
+    public fun mint<CoinType>(token_admin: &signer, amount: u64): Coin<CoinType> acquires Caps {
+        let token_admin_addr = signer::address_of(token_admin);
+        let caps = borrow_global<Caps<CoinType>>(token_admin_addr);
+        coin::mint<CoinType>(amount, &caps.mint)
+    }
+
+    public fun burn<CoinType>(token_admin: &signer, coins: Coin<CoinType>) acquires Caps {
+        let token_admin_addr = signer::address_of(token_admin);
+        let caps = borrow_global<Caps<CoinType>>(token_admin_addr);
+        coin::burn<CoinType>(coins, &caps.burn);
     }
 
     /// Mints new coin `CoinType` on account `acc_addr`.
