@@ -1,6 +1,7 @@
 module test_coins::coins {
     use std::signer;
     use std::string::utf8;
+    use aptos_framework::aptos_account;
 
     use aptos_framework::coin::{Self, MintCapability, BurnCapability};
 
@@ -61,6 +62,6 @@ module test_coins::coins {
         let token_admin_addr = signer::address_of(token_admin);
         let caps = borrow_global<Caps<CoinType>>(token_admin_addr);
         let coins = coin::mint<CoinType>(amount, &caps.mint);
-        coin::deposit(acc_addr, coins);
+        aptos_account::deposit_coins(acc_addr, coins);
     }
 }
